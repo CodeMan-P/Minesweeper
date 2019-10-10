@@ -15,14 +15,7 @@
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout" stretch="618,382">
    <item>
-    <widget class="QWidget" name="gameWidget" native="true">
-     <property name="autoFillBackground">
-      <bool>false</bool>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-color:rgb(255, 255, 255)</string>
-     </property>
-    </widget>
+    <widget class="QTableWidget" name="gameWidget"/>
    </item>
    <item>
     <widget class="QWidget" name="funWidget" native="true">

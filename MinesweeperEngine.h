@@ -1,6 +1,6 @@
 #pragma once
 #include "windows.h"
-
+#include<vector>
 
 enum BrickStatus
 {
@@ -24,27 +24,38 @@ enum BrickClickEnum
 	MIDDLE,
 };
 class Brick {
-private:
-	int x, y;
+public:
+	int x = 0;
+	int y = 0;
 	bool isMine = false;
 	int mineNumber = 0;
-	BrickStatus status;
+	BrickStatus brickStatus = NORMAL;
 };
 class MinesweeperEngine
 {
 public:
 	MinesweeperEngine();
 	~MinesweeperEngine();
-	void initBricks(int rows, int cols,int mineSum);
-	void clickBrick(int x,int y, BrickClickEnum ctype);
+	bool initBricks(int rows, int cols, int mineSum);
+	bool clickBrick(int x, int y, BrickClickEnum ctype);
 	GameStatus getGameStatus();
-	BrickStatus getBrickStatus();
+	BrickStatus getBrickStatus(int x, int y);
+	Brick getBrick(int x, int y);
+	int getNeighbourMineCount(int x, int y);
 private:
+	GameStatus gameStatus;
 	void resetEngine();
 	Brick* bricks = NULL;
 	void gameLoss();
+
+	std::vector<Brick*> getNeighbourBrick(int x, int y);
+	std::vector<Brick*> getNeighbourBrick(int x, int y, BrickStatus status);
+
+	bool isNeighbourFlagEqualNumber(int x, int y);
 	void clickNeighbourBrick(int x, int y);
-	int getNeighbourMineCount(int x, int y);
+
+	
+
 	int rows, cols, mineSum;
 	int normalBrickSum;
 	int flagBrickSum;

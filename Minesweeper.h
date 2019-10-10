@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_Minesweeper.h"
-
+#include "Mglobal.h"
 class Minesweeper : public QMainWindow
 {
 	Q_OBJECT

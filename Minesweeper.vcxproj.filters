@@ -98,14 +98,20 @@
     <ClInclude Include="GeneratedFiles\ui_Minesweeper.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_GamePanel.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="Mglobal.h">
       <Filter>Header Files\Util</Filter>
     </ClInclude>
     <ClInclude Include="MinesweeperEngine.h">
       <Filter>Header Files\gameEngine</Filter>
     </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_GamePanel.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Minesweeper.ico" />
   </ItemGroup>
 </Project>

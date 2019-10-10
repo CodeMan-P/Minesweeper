@@ -1,4 +1,8 @@
 <RCC>
-    <qresource prefix="Minesweeper">
+    <qresource prefix="/icons">
+        <file alias="boom.png">resources/icons/boom.png</file>
+        <file alias="flag.png">resources/icons/flag.png</file>
+        <file alias="mine.png">resources/icons/mine.png</file>
+        <file alias="suspicious.png">resources/icons/suspicious.png</file>
     </qresource>
 </RCC>

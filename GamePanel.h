@@ -12,6 +12,7 @@
 #include "ui_GamePanel.h"
 #include "MinesweeperEngine.h"
 #include "Mglobal.h"
+#include "BrickWidget.h"
 namespace Ui {
 	class GamePanel;
 }
@@ -26,9 +27,10 @@ public:
 	
 	~GamePanel();
 	void init();
+	void refreshPanel();
 
 private:
-	MinesweeperEngine* engine = NULL;
+	MinesweeperEngine* minesweeperEngine = NULL;
 	//QPixmap paintWidget();
 	////鼠标按下事件
 	//void mousePressEvent(QMouseEvent* event);
