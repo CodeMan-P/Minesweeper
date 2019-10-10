@@ -40,6 +40,12 @@
     <Filter Include="Source Files\Util">
       <UniqueIdentifier>{cb4784ad-a77f-4d41-ba0a-9d3453fbda30}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\gameEngine">
+      <UniqueIdentifier>{915887ed-5f84-4515-9217-43f485bdd05f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\gameEngine">
+      <UniqueIdentifier>{e9d057af-7314-4775-a1da-608133229441}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -56,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Mglobal.cpp">
       <Filter>Source Files\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="MinesweeperEngine.cpp">
+      <Filter>Source Files\gameEngine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +103,9 @@
     </ClInclude>
     <ClInclude Include="Mglobal.h">
       <Filter>Header Files\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="MinesweeperEngine.h">
+      <Filter>Header Files\gameEngine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
