@@ -180,6 +180,18 @@ bool MinesweeperEngine::clickBrick(int x, int y, BrickClickEnum ctype) {
 };
 void MinesweeperEngine::refreshGameStatus() {
 	if (gameStatus == LOSS) {
+		for (int j = 0; j < rows; j++)
+		{
+			for (int i = 0; i < cols; i++)
+			{
+				int index = j * cols + i;
+				Brick* tmpBrick = bricks + index;
+				if (tmpBrick->isMine) {
+					tmpBrick->brickStatus = BrickStatus::MINE;
+				}
+				
+			}
+		}
 		return;
 	}
 	//cout << flagBrickSum << " " << brickSurpluses << " " << mineSum << endl;
