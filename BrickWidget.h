@@ -27,7 +27,7 @@ private:
 	BrickStatus brickStatus;
 	int number = 0;
 	//鼠标按下事件
-	void mousePressEvent(QMouseEvent* event);
+	//void mousePressEvent(QMouseEvent* event);
 	void paintNumber(QPainter& p_painter);
 	
 public slots:

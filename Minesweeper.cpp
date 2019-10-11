@@ -1,7 +1,7 @@
 #include "Minesweeper.h"
 int brickRows = 9;
-int brickCols = 9;
-int mines = 10;
+int brickCols = 16;
+int mines = 30;
 Minesweeper::Minesweeper(QWidget *parent)
 	: QMainWindow(parent)
 {

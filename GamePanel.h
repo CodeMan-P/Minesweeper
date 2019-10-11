@@ -27,9 +27,13 @@ public:
 	
 	~GamePanel();
 	void init();
+	
 	void refreshPanel();
 
 private:
+	void clickBrickWidget(QPoint p, BrickClickEnum ctype);
+	bool eventFilter(QObject* obj, QEvent* e);
+	
 	MinesweeperEngine* minesweeperEngine = NULL;
 	//QPixmap paintWidget();
 	////鼠标按下事件

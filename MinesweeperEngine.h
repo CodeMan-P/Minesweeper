@@ -1,7 +1,15 @@
 #pragma once
 #include "windows.h"
 #include<vector>
-
+//(0,0)-----------------------x
+// |
+// |
+// |    (x,y) <==> (col,row)
+// |
+// |
+// |
+// |
+// y
 enum BrickStatus
 {
 	EMPTY,//Пе
@@ -20,8 +28,7 @@ enum BrickClickEnum
 {
 	L,
 	R,
-	LR,
-	MIDDLE,
+	MIDDLE,// DBL DBR LR,
 };
 class Brick {
 public:
@@ -42,22 +49,34 @@ public:
 	BrickStatus getBrickStatus(int x, int y);
 	Brick getBrick(int x, int y);
 	int getNeighbourMineCount(int x, int y);
+	
+
+	int getBrickSurpluses();
 private:
-	GameStatus gameStatus;
+	void refreshGameStatus();
 	void resetEngine();
+	bool lclick(Brick* brick);
+	bool rclick(Brick* brick);
+	bool midclick(Brick* brick);
+
+	GameStatus gameStatus;
+	
 	Brick* bricks = NULL;
 	void gameLoss();
 
 	std::vector<Brick*> getNeighbourBrick(int x, int y);
 	std::vector<Brick*> getNeighbourBrick(int x, int y, BrickStatus status);
 
-	bool isNeighbourFlagEqualNumber(int x, int y);
-	void clickNeighbourBrick(int x, int y);
+	bool isNeighbourSafe(int x, int y);
+	bool clickNeighbourBrick(int x, int y);
 
 	
 
 	int rows, cols, mineSum;
 	int normalBrickSum;
+
+	int brickSurpluses;
+	
 	int flagBrickSum;
 };
 

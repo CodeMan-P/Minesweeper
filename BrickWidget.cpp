@@ -8,9 +8,9 @@ BrickWidget::~BrickWidget() {
 void BrickWidget::init() {
 
 };
-void BrickWidget::mousePressEvent(QMouseEvent* event) {
-
-};
+//void BrickWidget::mousePressEvent(QMouseEvent* event) {
+//	qDebug() << "123";
+//};
 void BrickWidget::setStatus(BrickStatus status) {
 	if (this->brickStatus != status) {
 		this->brickStatus = status;
