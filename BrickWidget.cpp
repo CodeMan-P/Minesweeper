@@ -35,11 +35,6 @@ QPixmap BrickWidget::paintWidget()
 	pixmap.fill(Qt::gray);
 
 	
-	
-
-	
-
-	
 
 	switch (brickStatus)
 	{

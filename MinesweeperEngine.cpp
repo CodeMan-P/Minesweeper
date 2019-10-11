@@ -35,6 +35,9 @@ bool MinesweeperEngine::initBricks(int rows, int cols, int mineSum) {
 	resetEngine();
 	return true;
 };
+int MinesweeperEngine::getMineNumber() {
+	return mineSum - flagBrickSum;
+};
 int MinesweeperEngine::getBrickSurpluses() {
 	return brickSurpluses;
 };

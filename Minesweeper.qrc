@@ -1,8 +1,11 @@
 <RCC>
-    <qresource prefix="/icons">
-        <file alias="boom.png">resources/icons/boom.png</file>
-        <file alias="flag.png">resources/icons/flag.png</file>
-        <file alias="mine.png">resources/icons/mine.png</file>
-        <file alias="suspicious.png">resources/icons/suspicious.png</file>
-    </qresource>
+  <qresource prefix="/icons">
+    <file alias="restart">resources/icons/restart.png</file>
+    <file alias="return">resources/icons/return.png</file>
+    <file alias="timer.png">resources/icons/timer.png</file>
+    <file alias="boom.png">resources/icons/boom.png</file>
+    <file alias="flag.png">resources/icons/flag.png</file>
+    <file alias="mine.png">resources/icons/mine.png</file>
+    <file alias="suspicious.png">resources/icons/suspicious.png</file>
+  </qresource>
 </RCC>

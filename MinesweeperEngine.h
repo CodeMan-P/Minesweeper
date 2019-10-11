@@ -52,6 +52,7 @@ public:
 	
 
 	int getBrickSurpluses();
+	int getMineNumber();
 private:
 	void refreshGameStatus();
 	void resetEngine();

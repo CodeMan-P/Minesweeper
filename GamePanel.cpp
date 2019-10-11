@@ -16,9 +16,36 @@ GamePanel::GamePanel(QWidget* widget) :
 	ui->gameWidget->verticalHeader()->setVisible(false);
 	this->setFocusPolicy(Qt::StrongFocus);
 	ui->gameWidget->viewport()->installEventFilter(this);
-};
-GamePanel::~GamePanel() {
 
+	
+	ui->timeNumber->setPalette(Qt::red);
+	ui->mineNumber->setPalette(Qt::red);
+
+	timer = new QTimer(this);
+	connect(timer, SIGNAL(timeout()), this, SLOT(refreshTime()));
+	
+	connect(ui->restartButton, &QPushButton::clicked, [=]() { init(); });
+};
+void GamePanel::refreshTime() {
+	
+	int msecs = time.elapsed();
+	QString timestr;
+	timestr = QTime::fromMSecsSinceStartOfDay(msecs).toString(msecs/1000.0 >= 60 * 60 - 1 ? "hh:mm:ss" : "mm:ss");
+	
+	ui->timeNumber->setDigitCount(timestr.length());
+	ui->timeNumber->display(timestr); 
+}
+GamePanel::~GamePanel() {
+	ui->gameWidget->clear();
+	if (minesweeperEngine) {
+		delete minesweeperEngine;
+		minesweeperEngine = NULL;
+	}
+	if (timer) {
+		timer->stop();
+		delete timer;
+		timer = NULL;
+	}
 };
 bool GamePanel::eventFilter(QObject* obj, QEvent* e) {
 	
@@ -77,7 +104,7 @@ void GamePanel::clickBrickWidget(QPoint p, BrickClickEnum ctype) {
 	}
 }
 void GamePanel::init() {
-	
+	timer->stop();
 	if (minesweeperEngine->initBricks(brickRows, brickCols, mines)) {
 		ui->gameWidget->clear();
 		ui->gameWidget->setRowCount(brickRows);
@@ -96,6 +123,9 @@ void GamePanel::init() {
 	}
 	refreshPanel();
 	
+	ui->timeNumber->display("00:00");
+	time.restart();
+	timer->start(500);
 	
 };
 void GamePanel::refreshPanel() {
@@ -120,18 +150,23 @@ void GamePanel::refreshPanel() {
 			}*/
 		}
 	}
+	
+	QString mineNumber = QString::number(minesweeperEngine->getMineNumber());
+	ui->mineNumber->setDigitCount(mineNumber.length());
+	ui->mineNumber->display(mineNumber);
 
 	switch (minesweeperEngine->getGameStatus())
 	{
 	case WIN:
-		QMessageBox::information(NULL, "victory", "Congratulation!!!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+		QMessageBox::information(NULL, "victory", "Congratulation!!!", QMessageBox::Yes , QMessageBox::Yes);
 		init();
 		break;
 	case LOSS:
-		QMessageBox::information(NULL, "loss", "The game failed!!!", QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes);
+		QMessageBox::information(NULL, "loss", "The game failed!!!", QMessageBox::Yes , QMessageBox::Yes);
 		init();
 		break;
 	default:
 		break;
 	}
+
 };

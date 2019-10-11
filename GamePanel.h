@@ -9,6 +9,7 @@
 #include <QPolygon>
 #include <mutex>
 #include <QTimer>
+#include <QDateTime>
 #include "ui_GamePanel.h"
 #include "MinesweeperEngine.h"
 #include "Mglobal.h"
@@ -31,6 +32,9 @@ public:
 	void refreshPanel();
 
 private:
+	QTime time;
+	QTimer* timer;
+
 	void clickBrickWidget(QPoint p, BrickClickEnum ctype);
 	bool eventFilter(QObject* obj, QEvent* e);
 	
@@ -41,7 +45,8 @@ private:
 	//void paintEvent(QPaintEvent* event);
 
 public slots:
-	//pass
+	
+	void refreshTime();
 public:
 	//pass
 	

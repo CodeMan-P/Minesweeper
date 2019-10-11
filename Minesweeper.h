@@ -13,5 +13,6 @@ public:
 private:
 	void init();
 	void start();
+	void setBricks(int row, int cols, int n=0);
 	Ui::MinesweeperClass ui;
 };
