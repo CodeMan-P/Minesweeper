@@ -14,6 +14,7 @@
 #include "MinesweeperEngine.h"
 #include "Mglobal.h"
 #include "BrickWidget.h"
+#include<QMessageBox>
 namespace Ui {
 	class GamePanel;
 }
@@ -32,9 +33,10 @@ public:
 	void refreshPanel();
 
 private:
+	
 	QTime time;
 	QTimer* timer;
-
+	std::vector<BrickWidget*> brickWidgets;
 	void clickBrickWidget(QPoint p, BrickClickEnum ctype);
 	bool eventFilter(QObject* obj, QEvent* e);
 	
@@ -45,7 +47,7 @@ private:
 	//void paintEvent(QPaintEvent* event);
 
 public slots:
-	
+	void slotStop();
 	void refreshTime();
 public:
 	//pass

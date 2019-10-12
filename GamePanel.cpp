@@ -1,8 +1,8 @@
 #include "GamePanel.h"
 #include<iostream>
 #include<qDebug>
-#include<QMessageBox>
 
+using namespace std;
 GamePanel::GamePanel(QWidget* widget) :
 	QWidget(widget),
 	ui(new Ui::GamePanel)
@@ -26,6 +26,10 @@ GamePanel::GamePanel(QWidget* widget) :
 	
 	connect(ui->restartButton, &QPushButton::clicked, [=]() { init(); });
 };
+void GamePanel::slotStop() {
+	minesweeperEngine->stop();
+	ui->gameWidget->clear();
+}
 void GamePanel::refreshTime() {
 	
 	int msecs = time.elapsed();
@@ -98,17 +102,18 @@ void GamePanel::clickBrickWidget(QPoint p, BrickClickEnum ctype) {
 
 	//qDebug() << p << " " << index.column()<<" "<< index.row();
 	if (widget) {
-		//widget->setStatus(BrickStatus::FLAG);
 		minesweeperEngine->clickBrick(index.column(),index.row(), ctype);
 		refreshPanel();
 	}
 }
 void GamePanel::init() {
 	timer->stop();
+	slotStop();
 	if (minesweeperEngine->initBricks(brickRows, brickCols, mines)) {
 		ui->gameWidget->clear();
 		ui->gameWidget->setRowCount(brickRows);
 		ui->gameWidget->setColumnCount(brickCols);
+//#pragma omp parallel for
 		for (int x = 0; x < brickCols; x++)
 		{
 
@@ -129,7 +134,6 @@ void GamePanel::init() {
 	
 };
 void GamePanel::refreshPanel() {
-
 	for (int x = 0; x < brickCols; x++)
 	{
 		for (int y = 0; y < brickRows; y++)
@@ -154,7 +158,8 @@ void GamePanel::refreshPanel() {
 	QString mineNumber = QString::number(minesweeperEngine->getMineNumber());
 	ui->mineNumber->setDigitCount(mineNumber.length());
 	ui->mineNumber->display(mineNumber);
-
+	
+	QApplication::processEvents();
 	switch (minesweeperEngine->getGameStatus())
 	{
 	case WIN:

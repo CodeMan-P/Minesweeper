@@ -53,6 +53,7 @@ public:
 
 	int getBrickSurpluses();
 	int getMineNumber();
+	void stop();
 private:
 	void refreshGameStatus();
 	void resetEngine();
@@ -65,14 +66,14 @@ private:
 	Brick* bricks = NULL;
 	void gameLoss();
 
-	std::vector<Brick*> getNeighbourBrick(int x, int y);
-	std::vector<Brick*> getNeighbourBrick(int x, int y, BrickStatus status);
+	std::vector<Brick*> getNeighbourBrick(Brick* brick);
+	std::vector<Brick*> getNeighbourBrick(Brick* brick, BrickStatus status);
 
-	bool isNeighbourSafe(int x, int y);
-	bool clickNeighbourBrick(int x, int y);
+	bool isNeighbourSafe(Brick* brick);
+	bool clickNeighbourBrick(Brick* brick);
 
-	
-
+	void lclickNormal(Brick* brick);
+	int getNeighbourMineCount(Brick* brick);
 	int rows, cols, mineSum;
 	int normalBrickSum;
 

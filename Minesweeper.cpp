@@ -10,8 +10,10 @@ Minesweeper::Minesweeper(QWidget *parent)
 	init();
 }
 void Minesweeper::init() {
+	
 	connect(ui.gamePage->ui->returnButton, &QPushButton::clicked, [=]() {
 		ui.stackedWidget->setCurrentIndex(0);
+		ui.gamePage->slotStop();
 		});
 
 	connect(ui.x9, &QPushButton::clicked, [=]() {

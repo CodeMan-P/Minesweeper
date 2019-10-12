@@ -90,9 +90,6 @@ void BrickWidget::paintNumber(QPainter& p_painter) {
 }
 void BrickWidget::paintEvent(QPaintEvent* event) {
 	QPainter painter(this);
-	QWidget* p = (QWidget*)this->parent();
-
-	painter.setRenderHint(QPainter::Antialiasing);
 	painter.drawPixmap(0, 0, this->width(), this->height(), paintWidget());
 
 };

@@ -8,16 +8,18 @@ using namespace std;
 
 vector<bool> shuffle(int sum, int mines) {
 	srand((unsigned)time(NULL));
-	vector<bool> v(sum-mines, 0);
-	back_insert_iterator<std::vector<bool> > p = back_inserter(v);
-	for (int i = 0; i < mines; ++i) {
-		*p = 1;
-	}
+	vector<bool> v(max(sum - mines,0), 0);
+	v.insert(v.end(), mines, 1);
 	random_shuffle(v.begin(), v.end());
 	return v;
 }
 
-
+void MinesweeperEngine::stop() {
+	if (bricks) {
+		free(bricks);
+		bricks = NULL;
+	}
+};
 bool MinesweeperEngine::initBricks(int rows, int cols, int mineSum) {
 	normalBrickSum = rows * cols;
 	brickSurpluses = rows * cols;
@@ -49,6 +51,7 @@ void MinesweeperEngine::resetEngine() {
 		bricks = (Brick*)malloc(normalBrickSum * sizeof(Brick));
 	}
 	vector<bool> mineMap = shuffle(normalBrickSum, mineSum);
+#pragma omp parallel for
 	for (int j = 0; j < rows; j++)
 	{
 		for (int i = 0; i < cols; i++)
@@ -62,7 +65,7 @@ void MinesweeperEngine::resetEngine() {
 
 		}
 	}
-
+#pragma omp parallel for
 	for (int j = 0; j < rows; j++)
 	{
 		for (int i = 0; i < cols; i++)
@@ -70,7 +73,7 @@ void MinesweeperEngine::resetEngine() {
 			int index = j * cols + i;
 			Brick* tmpBrick = bricks + index;
 			if (!tmpBrick->isMine) {
-				tmpBrick->mineNumber = getNeighbourMineCount(i, j);
+				tmpBrick->mineNumber = getNeighbourMineCount(tmpBrick);
 			}
 			else
 			{
@@ -81,6 +84,23 @@ void MinesweeperEngine::resetEngine() {
 
 
 };
+void MinesweeperEngine::lclickNormal(Brick* brick) {
+	brickSurpluses--;
+	if (brick->isMine) {
+		brick->brickStatus = MINE;
+		gameStatus = LOSS;
+	}
+	else if (brick->mineNumber != 0)
+	{
+		brick->brickStatus = NUMBER;
+	}
+	else
+	{
+		brick->brickStatus = EMPTY;	
+	}
+
+
+}
 bool MinesweeperEngine::lclick(Brick* brick) {
 
 	BrickStatus brickStatus = brick->brickStatus;
@@ -89,19 +109,9 @@ bool MinesweeperEngine::lclick(Brick* brick) {
 	case EMPTY:
 		break;
 	case NORMAL:
-		brickSurpluses--;
-		if (brick->isMine) {
-			brick->brickStatus = MINE;
-			gameStatus = LOSS;
-		}
-		else if (brick->mineNumber != 0)
-		{
-			brick->brickStatus = NUMBER;
-		}
-		else
-		{
-			brick->brickStatus = EMPTY;
-			clickNeighbourBrick(brick->x, brick->y);
+		lclickNormal(brick);
+		if (brick->brickStatus == EMPTY) {
+			clickNeighbourBrick(brick);
 		}
 		return true;
 	case SUSPICIOUS:
@@ -152,7 +162,7 @@ bool MinesweeperEngine::midclick(Brick* brick) {
 	switch (brickStatus)
 	{
 	case NUMBER:
-		return clickNeighbourBrick(brick->x, brick->y);
+		return clickNeighbourBrick(brick);
 	default:
 		break;
 	}
@@ -180,6 +190,7 @@ bool MinesweeperEngine::clickBrick(int x, int y, BrickClickEnum ctype) {
 };
 void MinesweeperEngine::refreshGameStatus() {
 	if (gameStatus == LOSS) {
+#pragma omp parallel for
 		for (int j = 0; j < rows; j++)
 		{
 			for (int i = 0; i < cols; i++)
@@ -217,8 +228,11 @@ void MinesweeperEngine::gameLoss() {
 };
 
 
-std::vector<Brick*> MinesweeperEngine::getNeighbourBrick(int x, int y) {
+std::vector<Brick*> MinesweeperEngine::getNeighbourBrick(Brick* brick) {
 	std::vector<Brick*> neighbourBricks;
+	int x = brick->x;
+	int y = brick->y;
+
 	for (int i = x - 1; i <= x + 1; i++)
 	{
 		for (int j = y - 1; j <= y + 1; j++)
@@ -233,9 +247,9 @@ std::vector<Brick*> MinesweeperEngine::getNeighbourBrick(int x, int y) {
 	}
 	return neighbourBricks;
 };
-std::vector<Brick*> MinesweeperEngine::getNeighbourBrick(int x, int y, BrickStatus status) {
+std::vector<Brick*> MinesweeperEngine::getNeighbourBrick(Brick* brick, BrickStatus status) {
 	std::vector<Brick*> result;
-	std::vector<Brick*> neighbourBricks = getNeighbourBrick(x, y);
+	std::vector<Brick*> neighbourBricks = getNeighbourBrick(brick);
 	for (auto it : neighbourBricks)
 	{
 		if (it->brickStatus == status) {
@@ -245,25 +259,45 @@ std::vector<Brick*> MinesweeperEngine::getNeighbourBrick(int x, int y, BrickStat
 	return result;
 };
 
-bool MinesweeperEngine::isNeighbourSafe(int x, int y) {
-	int index = x + y * cols;
-	auto it = bricks + index;
-	return getNeighbourBrick(x, y, BrickStatus::FLAG).size() >= it->mineNumber;
+bool MinesweeperEngine::isNeighbourSafe(Brick* brick) {
+
+	return getNeighbourBrick(brick, BrickStatus::FLAG).size() >= brick->mineNumber;
 };
-bool MinesweeperEngine::clickNeighbourBrick(int x, int y) {
-	if (isNeighbourSafe(x, y)) {
-		std::vector<Brick*> normalBricks = getNeighbourBrick(x, y, NORMAL);
+bool MinesweeperEngine::clickNeighbourBrick(Brick* brick) {
+	/*if (isNeighbourSafe(brick)) {
+		std::vector<Brick*> normalBricks = getNeighbourBrick(brick, NORMAL);
 		for (auto it : normalBricks)
 		{
 			clickBrick(it->x, it->y, BrickClickEnum::L);
 		}
 		return true;
+	}*/
+	if (isNeighbourSafe(brick)) {
+		std::vector<Brick*> normalBricks = getNeighbourBrick(brick, NORMAL);
+		
+		while (normalBricks.size() != 0)
+		{
+			Brick* tmpBrick = normalBricks.back();
+			normalBricks.pop_back();
+			if (tmpBrick->brickStatus == NORMAL) {
+				lclickNormal(tmpBrick);
+				if (tmpBrick->brickStatus == EMPTY) {
+					std::vector<Brick*> tmpBricks = getNeighbourBrick(tmpBrick, NORMAL);
+					normalBricks.insert(normalBricks.end(), tmpBricks.begin(), tmpBricks.end());
+				}
+			}
+		}
+		return true;
 	}
 	return false;
 };
-
 int MinesweeperEngine::getNeighbourMineCount(int x, int y) {
-	std::vector<Brick*> neighbourBricks = getNeighbourBrick(x, y);
+	int index = x + y * cols;
+	auto it = bricks + index;
+	return getNeighbourMineCount(it);
+}
+int MinesweeperEngine::getNeighbourMineCount(Brick* brick) {
+	std::vector<Brick*> neighbourBricks = getNeighbourBrick(brick);
 	int count = 0;
 	for (auto it : neighbourBricks)
 	{
